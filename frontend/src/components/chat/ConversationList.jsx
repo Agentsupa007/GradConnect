@@ -1,7 +1,13 @@
 import { useEffect, useState } from 'react';
 import { getConversations } from '../../api/chatApi.js';
 import { useAuth } from '../../context/AuthContext.jsx';
-import { MessageCircle } from 'lucide-react';
+
+const avatarBgs = [
+  'bg-indigo-500', 'bg-sky-500', 'bg-violet-500',
+  'bg-emerald-500', 'bg-amber-500', 'bg-rose-500',
+];
+
+const roleLabel = { student: 'Student', recruiter: 'Recruiter', alumni: 'Alumni' };
 
 const ConversationList = ({ activeConvId, onSelect }) => {
   const [conversations, setConversations] = useState([]);
@@ -15,49 +21,53 @@ const ConversationList = ({ activeConvId, onSelect }) => {
       .finally(() => setLoading(false));
   }, []);
 
-  const getOtherParticipant = (conv) =>
-    conv.participants?.find(p => p._id !== user?._id) || {};
+  const getOther = (conv) => conv.participants?.find(p => p._id !== user?._id) || {};
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-32">
-        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-indigo-600" />
+      <div className="flex items-center justify-center h-24">
+        <div className="w-5 h-5 border-2 border-indigo-600 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   if (conversations.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center h-48 text-slate-500">
-        <MessageCircle className="h-10 w-10 mb-2 opacity-30" />
-        <p className="text-sm">No conversations yet</p>
+      <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="text-3xl mb-3">💬</div>
+        <p className="text-sm font-medium text-zinc-700">No conversations yet</p>
+        <p className="text-xs text-zinc-400 mt-1">Start one from the search page</p>
       </div>
     );
   }
 
   return (
-    <div className="divide-y divide-slate-100">
+    <div>
       {conversations.map(conv => {
-        const other = getOtherParticipant(conv);
+        const other = getOther(conv);
         const isActive = conv._id === activeConvId;
+        const bg = avatarBgs[(other.name || 'U').charCodeAt(0) % avatarBgs.length];
+
         return (
           <button
             key={conv._id}
             onClick={() => onSelect(conv)}
             className={`w-full text-left px-4 py-3 transition-colors flex items-center gap-3 ${
-              isActive ? 'bg-indigo-50' : 'hover:bg-slate-50'
+              isActive ? 'bg-indigo-50 border-r-2 border-indigo-500' : 'hover:bg-zinc-50'
             }`}
           >
-            <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold flex-shrink-0">
+            <div className={`w-9 h-9 rounded-full ${bg} flex items-center justify-center text-white font-bold text-sm flex-shrink-0`}>
               {(other.name || '?')[0].toUpperCase()}
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center justify-between">
-                <span className="font-medium text-sm text-slate-800 truncate">{other.name}</span>
-                <span className="text-xs text-slate-400 capitalize ml-1">{other.role}</span>
+                <span className={`text-sm font-semibold truncate ${isActive ? 'text-indigo-700' : 'text-zinc-800'}`}>
+                  {other.name}
+                </span>
+                <span className="text-[10px] text-zinc-400 capitalize ml-1 flex-shrink-0">{roleLabel[other.role]}</span>
               </div>
-              <p className="text-xs text-slate-500 truncate mt-0.5">
-                {conv.lastMessage || 'No messages yet'}
+              <p className="text-xs text-zinc-400 truncate mt-0.5">
+                {conv.lastMessage || 'Say hello 👋'}
               </p>
             </div>
           </button>

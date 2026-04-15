@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from 'react';
 import { getSkillsApi } from '../../api/authApi.js';
 import SkillBadge from './SkillBadge.jsx';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Search } from 'lucide-react';
 
-const SkillSelector = ({ selected = [], onChange, placeholder = 'Select or type skills...' }) => {
+const SkillSelector = ({ selected = [], onChange, placeholder = 'Search skills...' }) => {
   const [allSkills, setAllSkills] = useState([]);
   const [query, setQuery] = useState('');
   const [isOpen, setIsOpen] = useState(false);
@@ -14,7 +14,9 @@ const SkillSelector = ({ selected = [], onChange, placeholder = 'Select or type 
   }, []);
 
   useEffect(() => {
-    const handler = (e) => { if (ref.current && !ref.current.contains(e.target)) setIsOpen(false); };
+    const handler = (e) => {
+      if (ref.current && !ref.current.contains(e.target)) setIsOpen(false);
+    };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
@@ -36,11 +38,12 @@ const SkillSelector = ({ selected = [], onChange, placeholder = 'Select or type 
       e.preventDefault();
       addSkill(query.trim());
     }
+    if (e.key === 'Escape') setIsOpen(false);
   };
 
   return (
     <div ref={ref} className="relative">
-      {/* Selected skills */}
+      {/* Selected badges */}
       {selected.length > 0 && (
         <div className="flex flex-wrap gap-1.5 mb-2">
           {selected.map(skill => (
@@ -51,39 +54,44 @@ const SkillSelector = ({ selected = [], onChange, placeholder = 'Select or type 
 
       {/* Input */}
       <div
-        className="flex items-center gap-2 w-full border border-slate-300 rounded-lg px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 cursor-text"
+        className="flex items-center gap-2 w-full border border-zinc-300 rounded-lg px-3 py-2 bg-white focus-within:ring-2 focus-within:ring-indigo-500 focus-within:border-indigo-500 cursor-text"
         onClick={() => setIsOpen(true)}
       >
+        <Search className="h-3.5 w-3.5 text-zinc-400 flex-shrink-0" />
         <input
           type="text"
           value={query}
           onChange={(e) => { setQuery(e.target.value); setIsOpen(true); }}
           onKeyDown={handleKeyDown}
-          placeholder={selected.length === 0 ? placeholder : 'Add more...'}
-          className="flex-1 outline-none text-sm text-slate-700 bg-transparent"
+          onFocus={() => setIsOpen(true)}
+          placeholder={selected.length === 0 ? placeholder : 'Add more skills...'}
+          className="flex-1 outline-none text-sm text-zinc-700 bg-transparent placeholder-zinc-400 min-w-0"
         />
-        <ChevronDown className="h-4 w-4 text-slate-400 flex-shrink-0" />
+        <ChevronDown className={`h-3.5 w-3.5 text-zinc-400 flex-shrink-0 transition-transform ${isOpen ? 'rotate-180' : ''}`} />
       </div>
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute z-50 w-full mt-1 bg-white border border-slate-200 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-          {query.trim() && !allSkills.includes(query.trim()) && (
+        <div className="absolute z-50 w-full mt-1 bg-white border border-zinc-200 rounded-xl shadow-lg max-h-52 overflow-y-auto">
+          {query.trim() && !allSkills.map(s => s.toLowerCase()).includes(query.trim().toLowerCase()) && (
             <button
               onClick={() => addSkill(query.trim())}
-              className="w-full text-left px-3 py-2 text-sm text-indigo-600 hover:bg-indigo-50 font-medium"
+              className="w-full text-left px-3 py-2.5 text-sm text-indigo-600 hover:bg-indigo-50 font-medium border-b border-zinc-100"
             >
-              + Add "{query.trim()}"
+              + Add &ldquo;{query.trim()}&rdquo;
             </button>
           )}
           {filtered.length === 0 && !query.trim() && (
-            <div className="px-3 py-2 text-sm text-slate-500">Type to search skills</div>
+            <div className="px-3 py-3 text-sm text-zinc-400 text-center">Type to search skills</div>
+          )}
+          {filtered.length === 0 && query.trim() && !(!allSkills.map(s => s.toLowerCase()).includes(query.trim().toLowerCase())) && (
+            <div className="px-3 py-3 text-sm text-zinc-400 text-center">No matching skills</div>
           )}
           {filtered.map(skill => (
             <button
               key={skill}
               onClick={() => addSkill(skill)}
-              className="w-full text-left px-3 py-2 text-sm text-slate-700 hover:bg-indigo-50 hover:text-indigo-700"
+              className="w-full text-left px-3 py-2 text-sm text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900"
             >
               {skill}
             </button>

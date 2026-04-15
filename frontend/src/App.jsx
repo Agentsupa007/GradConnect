@@ -13,6 +13,8 @@ import RegisterPage from './pages/auth/RegisterPage.jsx';
 import StudentDashboard from './pages/student/StudentDashboard.jsx';
 import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import StudentChatPage from './pages/student/StudentChatPage.jsx';
+import StudentPeerSearchPage from './pages/student/StudentSearchPage.jsx';
+import StudentShortlistPage from './pages/student/StudentShortlistPage.jsx';
 
 import RecruiterDashboard from './pages/recruiter/RecruiterDashboard.jsx';
 import RecruiterProfilePage from './pages/recruiter/RecruiterProfilePage.jsx';
@@ -31,7 +33,7 @@ function App() {
     <BrowserRouter>
       <AuthProvider>
         <SocketProvider>
-          <div className="min-h-screen bg-slate-50">
+          <div className="min-h-screen bg-[#f5f4f0]">
             <Navbar />
             <Routes>
               {/* Public */}
@@ -44,6 +46,8 @@ function App() {
                 <Route path="/student/dashboard" element={<StudentDashboard />} />
                 <Route path="/student/profile" element={<StudentProfilePage />} />
                 <Route path="/student/chat" element={<StudentChatPage />} />
+                <Route path="/student/search" element={<StudentPeerSearchPage />} />
+                <Route path="/student/shortlist" element={<StudentShortlistPage />} />
               </Route>
 
               {/* Recruiter Routes */}

@@ -26,6 +26,7 @@ const studentProfileSchema = new mongoose.Schema({
   resumes: [resumeSchema],
   projects: [projectSchema],
   profileCompleted: { type: Boolean, default: false },
+  starredStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StudentProfile' }],
 }, { timestamps: true });
 
 export default mongoose.model('StudentProfile', studentProfileSchema);

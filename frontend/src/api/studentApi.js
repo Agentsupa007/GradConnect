@@ -9,3 +9,7 @@ export const activateResume = (resumeId) => axiosInstance.put(`/student/resumes/
 export const addProject = (data) => axiosInstance.post('/student/projects', data);
 export const updateProject = (projectId, data) => axiosInstance.put(`/student/projects/${projectId}`, data);
 export const deleteProject = (projectId) => axiosInstance.delete(`/student/projects/${projectId}`);
+
+export const getStarredStudentsStudent = () => axiosInstance.get('/student/starred');
+export const starStudentStudent = (studentId) => axiosInstance.post(`/student/star/${studentId}`);
+export const unstarStudentStudent = (studentId) => axiosInstance.delete(`/student/star/${studentId}`);

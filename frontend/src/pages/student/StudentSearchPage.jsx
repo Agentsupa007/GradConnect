@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { searchStudents } from '../../api/searchApi.js';
-import { starStudentRecruiter, unstarStudentRecruiter, getStarredStudentsRecruiter } from '../../api/recruiterApi.js';
+import { starStudentStudent, unstarStudentStudent, getStarredStudentsStudent } from '../../api/studentApi.js';
 import { createOrGetConversation } from '../../api/chatApi.js';
 import SkillSelector from '../../components/shared/SkillSelector.jsx';
 import StudentCard from '../../components/shared/StudentCard.jsx';
@@ -18,7 +18,7 @@ const StudentSearchPage = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    getStarredStudentsRecruiter()
+    getStarredStudentsStudent()
       .then(({ data }) => setStarredIds(new Set(data.map(s => s._id))))
       .catch(() => {});
     doSearch([]);
@@ -38,11 +38,11 @@ const StudentSearchPage = () => {
   const handleStar = async (studentId, star) => {
     try {
       if (star) {
-        await starStudentRecruiter(studentId);
+        await starStudentStudent(studentId);
         setStarredIds(prev => new Set([...prev, studentId]));
         toast.success('Added to shortlist');
       } else {
-        await unstarStudentRecruiter(studentId);
+        await unstarStudentStudent(studentId);
         setStarredIds(prev => { const s = new Set(prev); s.delete(studentId); return s; });
         toast.success('Removed from shortlist');
       }
@@ -52,7 +52,7 @@ const StudentSearchPage = () => {
   const handleChat = async (userId) => {
     try {
       const { data } = await createOrGetConversation(userId);
-      navigate(`/recruiter/chat?conv=${data._id}`);
+      navigate(`/student/chat?conv=${data._id}`);
     } catch { toast.error('Could not start chat'); }
   };
 
@@ -60,7 +60,7 @@ const StudentSearchPage = () => {
     <div className="max-w-6xl mx-auto px-4 py-8">
       <div className="mb-7">
         <h1 className="text-2xl font-bold text-zinc-900">Find Students</h1>
-        <p className="text-zinc-400 text-sm mt-0.5">Search by skills — results ranked by how many match</p>
+        <p className="text-zinc-400 text-sm mt-0.5">Discover peers by skills — connect and collaborate</p>
       </div>
 
       {/* Search */}
@@ -75,7 +75,7 @@ const StudentSearchPage = () => {
           </div>
           <button
             onClick={() => doSearch(skills)}
-            className="flex items-center gap-2 px-5 py-2.5 bg-zinc-900 text-white font-semibold rounded-xl hover:bg-zinc-700 transition-colors flex-shrink-0 self-end text-sm"
+            className="flex items-center gap-2 px-5 py-2.5 bg-indigo-600 text-white font-semibold rounded-xl hover:bg-indigo-700 transition-colors flex-shrink-0 self-end text-sm"
           >
             <Search className="h-4 w-4" />
             Search
@@ -98,7 +98,6 @@ const StudentSearchPage = () => {
         </div>
       ) : searched && students.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-20 text-center">
-          <div className="text-4xl mb-4">🔍</div>
           <p className="font-semibold text-zinc-700">No students found</p>
           <p className="text-sm text-zinc-400 mt-1">Try different skill combinations</p>
         </div>

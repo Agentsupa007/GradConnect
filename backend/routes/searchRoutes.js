@@ -5,6 +5,6 @@ import { searchStudents } from '../controllers/searchController.js';
 
 const router = express.Router();
 
-router.get('/students', protect, authorizeRoles('recruiter', 'alumni'), searchStudents);
+router.get('/students', protect, authorizeRoles('recruiter', 'alumni', 'student'), searchStudents);
 
 export default router;

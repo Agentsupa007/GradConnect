@@ -1,22 +1,30 @@
-const colors = [
-  'bg-blue-100 text-blue-700',
-  'bg-green-100 text-green-700',
-  'bg-purple-100 text-purple-700',
-  'bg-orange-100 text-orange-700',
-  'bg-pink-100 text-pink-700',
-  'bg-teal-100 text-teal-700',
+const palettes = [
+  'bg-indigo-50 text-indigo-700 border-indigo-100',
+  'bg-sky-50 text-sky-700 border-sky-100',
+  'bg-violet-50 text-violet-700 border-violet-100',
+  'bg-emerald-50 text-emerald-700 border-emerald-100',
+  'bg-amber-50 text-amber-700 border-amber-100',
+  'bg-rose-50 text-rose-700 border-rose-100',
+  'bg-cyan-50 text-cyan-700 border-cyan-100',
+  'bg-orange-50 text-orange-700 border-orange-100',
 ];
 
 const SkillBadge = ({ skill, onRemove, size = 'sm' }) => {
-  const colorIndex = skill.charCodeAt(0) % colors.length;
-  const color = colors[colorIndex];
-  const padding = size === 'xs' ? 'px-2 py-0.5 text-xs' : 'px-2.5 py-1 text-xs';
+  const idx = (skill.charCodeAt(0) + skill.charCodeAt(skill.length - 1)) % palettes.length;
+  const palette = palettes[idx];
+  const sizeClass = size === 'xs'
+    ? 'px-2 py-0.5 text-[11px] gap-0.5'
+    : 'px-2.5 py-1 text-xs gap-1';
 
   return (
-    <span className={`inline-flex items-center gap-1 rounded-full font-medium ${color} ${padding}`}>
+    <span className={`inline-flex items-center font-medium rounded-full border ${palette} ${sizeClass}`}>
       {skill}
       {onRemove && (
-        <button onClick={() => onRemove(skill)} className="hover:opacity-70 ml-0.5">
+        <button
+          onClick={() => onRemove(skill)}
+          className="hover:opacity-60 leading-none"
+          aria-label={`Remove ${skill}`}
+        >
           ×
         </button>
       )}

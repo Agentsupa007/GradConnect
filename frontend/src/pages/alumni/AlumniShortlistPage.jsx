@@ -1,9 +1,8 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getStarredStudentsAlumni, unstarStudentAlumni } from '../../api/alumniApi.js';
 import { createOrGetConversation } from '../../api/chatApi.js';
 import StudentCard from '../../components/shared/StudentCard.jsx';
-import { Star } from 'lucide-react';
 import toast from 'react-hot-toast';
 
 const AlumniShortlistPage = () => {
@@ -23,7 +22,7 @@ const AlumniShortlistPage = () => {
       try {
         await unstarStudentAlumni(studentId);
         setStarred(prev => prev.filter(s => s._id !== studentId));
-        toast.success('Removed from shortlist');
+        toast.success('Removed');
       } catch { toast.error('Failed'); }
     }
   };
@@ -35,19 +34,29 @@ const AlumniShortlistPage = () => {
     } catch { toast.error('Could not start chat'); }
   };
 
-  if (loading) return <div className="min-h-screen flex items-center justify-center"><div className="animate-spin rounded-full h-10 w-10 border-b-2 border-indigo-600" /></div>;
+  if (loading) return (
+    <div className="min-h-screen flex items-center justify-center bg-[#f5f4f0]">
+      <div className="w-8 h-8 border-2 border-violet-600 border-t-transparent rounded-full animate-spin" />
+    </div>
+  );
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-800">My Shortlist</h1>
-        <p className="text-slate-500 text-sm">{starred.length} starred student{starred.length !== 1 ? 's' : ''}</p>
+      <div className="mb-7">
+        <h1 className="text-2xl font-bold text-zinc-900">My Shortlist</h1>
+        <p className="text-zinc-400 text-sm mt-0.5">
+          {starred.length > 0 ? `${starred.length} student${starred.length !== 1 ? 's' : ''} you're following` : 'Star students you want to mentor'}
+        </p>
       </div>
+
       {starred.length === 0 ? (
-        <div className="flex flex-col items-center justify-center h-64 text-slate-500 bg-white rounded-xl border border-slate-200">
-          <Star className="h-12 w-12 mb-3 opacity-20" />
-          <p className="font-medium">No starred students yet</p>
-          <p className="text-sm mt-1">Star students from the search page to shortlist them</p>
+        <div className="bg-white rounded-2xl border-2 border-dashed border-zinc-200 p-16 text-center">
+          <div className="text-5xl mb-4">⭐</div>
+          <p className="font-semibold text-zinc-700 mb-2">No students starred yet</p>
+          <p className="text-sm text-zinc-400 mb-6">Find students you'd like to mentor and star them</p>
+          <Link to="/alumni/search" className="inline-flex items-center gap-2 px-5 py-2.5 bg-violet-600 text-white text-sm font-semibold rounded-xl hover:bg-violet-700 transition-colors">
+            Find students →
+          </Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4">

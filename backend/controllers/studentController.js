@@ -159,3 +159,47 @@ export const deleteProject = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
+// POST /api/student/star/:studentId
+export const starStudent = async (req, res) => {
+  try {
+    const profile = await StudentProfile.findOne({ user: req.user._id });
+    const studentId = req.params.studentId;
+    if (!profile.starredStudents.includes(studentId)) {
+      profile.starredStudents.push(studentId);
+      await profile.save();
+    }
+    res.json({ message: 'Student starred', starredStudents: profile.starredStudents });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// DELETE /api/student/star/:studentId
+export const unstarStudent = async (req, res) => {
+  try {
+    const profile = await StudentProfile.findOne({ user: req.user._id });
+    profile.starredStudents = profile.starredStudents.filter(
+      id => id.toString() !== req.params.studentId
+    );
+    await profile.save();
+    res.json({ message: 'Student unstarred', starredStudents: profile.starredStudents });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+// GET /api/student/starred
+export const getStarredStudents = async (req, res) => {
+  try {
+    const profile = await StudentProfile.findOne({ user: req.user._id })
+      .populate({
+        path: 'starredStudents',
+        populate: { path: 'user', select: 'name email' },
+      });
+    if (!profile) return res.json([]);
+    res.json(profile.starredStudents);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};

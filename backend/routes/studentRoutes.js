@@ -5,6 +5,7 @@ import {
   getProfile, updateProfile, updateSkills,
   addResume, deleteResume, activateResume,
   addProject, updateProject, deleteProject,
+  starStudent, unstarStudent, getStarredStudents,
 } from '../controllers/studentController.js';
 
 const router = express.Router();
@@ -19,5 +20,9 @@ router.put('/resumes/:resumeId/activate', activateResume);
 router.post('/projects', addProject);
 router.put('/projects/:projectId', updateProject);
 router.delete('/projects/:projectId', deleteProject);
+
+router.get('/starred', getStarredStudents);
+router.post('/star/:studentId', starStudent);
+router.delete('/star/:studentId', unstarStudent);
 
 export default router;
