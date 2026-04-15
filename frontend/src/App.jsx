@@ -15,12 +15,18 @@ import StudentProfilePage from './pages/student/StudentProfilePage.jsx';
 import StudentChatPage from './pages/student/StudentChatPage.jsx';
 import StudentPeerSearchPage from './pages/student/StudentSearchPage.jsx';
 import StudentShortlistPage from './pages/student/StudentShortlistPage.jsx';
+import StudentJobsPage from './pages/student/StudentJobsPage.jsx';
+import StudentApplicationsPage from './pages/student/StudentApplicationsPage.jsx';
+import PlacementsPage from './pages/student/PlacementsPage.jsx';
+import StudentMentorsPage from './pages/student/StudentMentorsPage.jsx';
 
 import RecruiterDashboard from './pages/recruiter/RecruiterDashboard.jsx';
 import RecruiterProfilePage from './pages/recruiter/RecruiterProfilePage.jsx';
 import StudentSearchPage from './pages/recruiter/StudentSearchPage.jsx';
 import ShortlistPage from './pages/recruiter/ShortlistPage.jsx';
 import RecruiterChatPage from './pages/recruiter/RecruiterChatPage.jsx';
+import RecruiterJobsPage from './pages/recruiter/RecruiterJobsPage.jsx';
+import JobApplicantsPage from './pages/recruiter/JobApplicantsPage.jsx';
 
 import AlumniDashboard from './pages/alumni/AlumniDashboard.jsx';
 import AlumniProfilePage from './pages/alumni/AlumniProfilePage.jsx';
@@ -48,6 +54,10 @@ function App() {
                 <Route path="/student/chat" element={<StudentChatPage />} />
                 <Route path="/student/search" element={<StudentPeerSearchPage />} />
                 <Route path="/student/shortlist" element={<StudentShortlistPage />} />
+                <Route path="/student/jobs" element={<StudentJobsPage />} />
+                <Route path="/student/applications" element={<StudentApplicationsPage />} />
+                <Route path="/student/placements" element={<PlacementsPage />} />
+                <Route path="/student/mentors" element={<StudentMentorsPage />} />
               </Route>
 
               {/* Recruiter Routes */}
@@ -57,6 +67,8 @@ function App() {
                 <Route path="/recruiter/search" element={<StudentSearchPage />} />
                 <Route path="/recruiter/shortlist" element={<ShortlistPage />} />
                 <Route path="/recruiter/chat" element={<RecruiterChatPage />} />
+                <Route path="/recruiter/jobs" element={<RecruiterJobsPage />} />
+                <Route path="/recruiter/jobs/:jobId/applicants" element={<JobApplicantsPage />} />
               </Route>
 
               {/* Alumni Routes */}

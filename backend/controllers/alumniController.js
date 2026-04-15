@@ -15,7 +15,7 @@ export const getProfile = async (req, res) => {
 // PUT /api/alumni/profile
 export const updateProfile = async (req, res) => {
   try {
-    const { currentCompany, currentRole, graduationYear, branch, linkedInUrl, bio, phone, isAvailableForMentorship } = req.body;
+    const { currentCompany, currentRole, graduationYear, branch, linkedInUrl, bio, phone, isAvailableForMentorship, skills, yearsOfExperience } = req.body;
     const update = {};
     if (currentCompany !== undefined) update.currentCompany = currentCompany;
     if (currentRole !== undefined) update.currentRole = currentRole;
@@ -25,6 +25,8 @@ export const updateProfile = async (req, res) => {
     if (bio !== undefined) update.bio = bio;
     if (phone !== undefined) update.phone = phone;
     if (isAvailableForMentorship !== undefined) update.isAvailableForMentorship = isAvailableForMentorship;
+    if (skills !== undefined) update.skills = skills;
+    if (yearsOfExperience !== undefined) update.yearsOfExperience = yearsOfExperience;
 
     const updated = await AlumniProfile.findOneAndUpdate(
       { user: req.user._id },

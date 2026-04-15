@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { getAlumniProfile, updateAlumniProfile } from '../../api/alumniApi.js';
+import SkillSelector from '../../components/shared/SkillSelector.jsx';
+import SkillBadge from '../../components/shared/SkillBadge.jsx';
 import toast from 'react-hot-toast';
 import { Save, Pencil, X } from 'lucide-react';
 
-const EMPTY = { currentCompany: '', currentRole: '', graduationYear: '', branch: '', linkedInUrl: '', bio: '', phone: '', isAvailableForMentorship: true };
+const EMPTY = { currentCompany: '', currentRole: '', graduationYear: '', branch: '', linkedInUrl: '', bio: '', phone: '', yearsOfExperience: '', skills: [], isAvailableForMentorship: true };
 
 const BRANCHES = [
   'Computer Science Engineering', 'Information Technology', 'Electronics & Communication',
@@ -31,7 +33,7 @@ const AlumniProfilePage = () => {
     getAlumniProfile()
       .then(({ data }) => {
         setProfile(data);
-        setForm({ currentCompany: data.currentCompany || '', currentRole: data.currentRole || '', graduationYear: data.graduationYear || '', branch: data.branch || '', linkedInUrl: data.linkedInUrl || '', bio: data.bio || '', phone: data.phone || '', isAvailableForMentorship: data.isAvailableForMentorship ?? true });
+        setForm({ currentCompany: data.currentCompany || '', currentRole: data.currentRole || '', graduationYear: data.graduationYear || '', branch: data.branch || '', linkedInUrl: data.linkedInUrl || '', bio: data.bio || '', phone: data.phone || '', yearsOfExperience: data.yearsOfExperience || '', skills: data.skills || [], isAvailableForMentorship: data.isAvailableForMentorship ?? true });
         if (!data.currentCompany && !data.currentRole) setEditing(true);
       })
       .catch(() => setEditing(true))
@@ -39,7 +41,7 @@ const AlumniProfilePage = () => {
   }, []);
 
   const handleEdit = () => {
-    setForm({ currentCompany: profile?.currentCompany || '', currentRole: profile?.currentRole || '', graduationYear: profile?.graduationYear || '', branch: profile?.branch || '', linkedInUrl: profile?.linkedInUrl || '', bio: profile?.bio || '', phone: profile?.phone || '', isAvailableForMentorship: profile?.isAvailableForMentorship ?? true });
+    setForm({ currentCompany: profile?.currentCompany || '', currentRole: profile?.currentRole || '', graduationYear: profile?.graduationYear || '', branch: profile?.branch || '', linkedInUrl: profile?.linkedInUrl || '', bio: profile?.bio || '', phone: profile?.phone || '', yearsOfExperience: profile?.yearsOfExperience || '', skills: profile?.skills || [], isAvailableForMentorship: profile?.isAvailableForMentorship ?? true });
     setEditing(true);
   };
 
@@ -84,7 +86,8 @@ const AlumniProfilePage = () => {
               { key: 'currentRole',    label: 'Current Role',    placeholder: 'Senior Software Engineer' },
               { key: 'phone',          label: 'Phone',           placeholder: '+91 9876543210', type: 'tel' },
               { key: 'graduationYear', label: 'Graduation Year', placeholder: '2022', type: 'number' },
-              { key: 'linkedInUrl',    label: 'LinkedIn URL',    placeholder: 'https://linkedin.com/in/…', type: 'url' },
+              { key: 'linkedInUrl',    label: 'LinkedIn URL',       placeholder: 'https://linkedin.com/in/…', type: 'url' },
+              { key: 'yearsOfExperience', label: 'Years of Experience', placeholder: '3', type: 'number' },
             ].map(f => (
               <div key={f.key}>
                 <label className="block text-[13px] font-medium text-zinc-700 mb-1.5">{f.label}</label>
@@ -98,6 +101,11 @@ const AlumniProfilePage = () => {
                 {BRANCHES.map(b => <option key={b} value={b}>{b}</option>)}
               </select>
             </div>
+          </div>
+          <div>
+            <label className="block text-[13px] font-medium text-zinc-700 mb-1.5">Tech Stack / Skills</label>
+            <SkillSelector selected={form.skills} onChange={v => setForm({ ...form, skills: v })} placeholder="React.js, Node.js, Python…" />
+            <p className="text-xs text-zinc-400 mt-1">Students will find you based on these skills</p>
           </div>
           <div>
             <label className="block text-[13px] font-medium text-zinc-700 mb-1.5">Bio</label>
@@ -121,12 +129,21 @@ const AlumniProfilePage = () => {
         </form>
       ) : (
         <div className="bg-white rounded-2xl border border-zinc-200 p-6">
-          <ViewField label="Current Company" value={profile?.currentCompany} />
-          <ViewField label="Current Role"    value={profile?.currentRole} />
-          <ViewField label="Branch"          value={profile?.branch} />
-          <ViewField label="Graduation Year" value={profile?.graduationYear} />
-          <ViewField label="LinkedIn"        value={profile?.linkedInUrl} />
-          <ViewField label="Phone"           value={profile?.phone} />
+          <ViewField label="Current Company"    value={profile?.currentCompany} />
+          <ViewField label="Current Role"       value={profile?.currentRole} />
+          <ViewField label="Years of Experience" value={profile?.yearsOfExperience ? `${profile.yearsOfExperience} year${profile.yearsOfExperience !== 1 ? 's' : ''}` : null} />
+          <ViewField label="Branch"             value={profile?.branch} />
+          <ViewField label="Graduation Year"    value={profile?.graduationYear} />
+          <ViewField label="LinkedIn"           value={profile?.linkedInUrl} />
+          <ViewField label="Phone"              value={profile?.phone} />
+          {profile?.skills?.length > 0 && (
+            <div className="py-3 border-b border-zinc-50">
+              <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-wide mb-2">Tech Stack</p>
+              <div className="flex flex-wrap gap-1.5">
+                {profile.skills.map(s => <SkillBadge key={s} skill={s} />)}
+              </div>
+            </div>
+          )}
           {profile?.bio && (
             <div className="py-3 border-b border-zinc-50">
               <p className="text-[11px] font-medium text-zinc-400 uppercase tracking-wide mb-1">Bio</p>

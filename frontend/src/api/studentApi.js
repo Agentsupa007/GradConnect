@@ -13,3 +13,5 @@ export const deleteProject = (projectId) => axiosInstance.delete(`/student/proje
 export const getStarredStudentsStudent = () => axiosInstance.get('/student/starred');
 export const starStudentStudent = (studentId) => axiosInstance.post(`/student/star/${studentId}`);
 export const unstarStudentStudent = (studentId) => axiosInstance.delete(`/student/star/${studentId}`);
+
+export const getMentors = (params) => axiosInstance.get('/student/mentors', { params });

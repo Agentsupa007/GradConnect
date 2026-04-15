@@ -12,6 +12,7 @@ import recruiterRoutes from './routes/recruiterRoutes.js';
 import alumniRoutes from './routes/alumniRoutes.js';
 import searchRoutes from './routes/searchRoutes.js';
 import chatRoutes from './routes/chatRoutes.js';
+import jobRoutes from './routes/jobRoutes.js';
 import socketHandler from './socket/socketHandler.js';
 
 const app = express();
@@ -42,6 +43,7 @@ app.use('/api/recruiter', recruiterRoutes);
 app.use('/api/alumni', alumniRoutes);
 app.use('/api/search', searchRoutes);
 app.use('/api/chat', chatRoutes);
+app.use('/api/recruiter/jobs', jobRoutes);
 
 // Skills list (public)
 app.get('/api/skills', (req, res) => res.json(PREDEFINED_SKILLS));

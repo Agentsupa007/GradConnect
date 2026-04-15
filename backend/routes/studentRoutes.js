@@ -7,6 +7,9 @@ import {
   addProject, updateProject, deleteProject,
   starStudent, unstarStudent, getStarredStudents,
 } from '../controllers/studentController.js';
+import {
+  getOpenJobs, applyToJob, getMyApplications, getPlacements, getMentors,
+} from '../controllers/applicationController.js';
 
 const router = express.Router();
 router.use(protect, authorizeRoles('student'));
@@ -24,5 +27,11 @@ router.delete('/projects/:projectId', deleteProject);
 router.get('/starred', getStarredStudents);
 router.post('/star/:studentId', starStudent);
 router.delete('/star/:studentId', unstarStudent);
+
+router.get('/jobs', getOpenJobs);
+router.post('/jobs/:jobId/apply', applyToJob);
+router.get('/applications', getMyApplications);
+router.get('/placements', getPlacements);
+router.get('/mentors', getMentors);
 
 export default router;

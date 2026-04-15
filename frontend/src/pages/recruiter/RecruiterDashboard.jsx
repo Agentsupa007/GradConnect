@@ -2,21 +2,25 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext.jsx';
 import { getRecruiterProfile, getStarredStudentsRecruiter } from '../../api/recruiterApi.js';
-import { ArrowRight, Search, Star, MessageCircle, Building2 } from 'lucide-react';
+import { ArrowRight, Search, Star, MessageCircle, Building2, Briefcase } from 'lucide-react';
+import { getMyJobs } from '../../api/jobApi.js';
 
 const RecruiterDashboard = () => {
   const { user } = useAuth();
   const [profile, setProfile] = useState(null);
   const [starred, setStarred] = useState([]);
+  const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     Promise.all([
       getRecruiterProfile().catch(() => null),
       getStarredStudentsRecruiter().catch(() => ({ data: [] })),
-    ]).then(([p, s]) => {
+      getMyJobs().catch(() => ({ data: [] })),
+    ]).then(([p, s, j]) => {
       setProfile(p?.data);
       setStarred(s?.data || []);
+      setJobs(j?.data || []);
     }).finally(() => setLoading(false));
   }, []);
 
@@ -44,10 +48,14 @@ const RecruiterDashboard = () => {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-4 mb-6">
         <div className="bg-white rounded-2xl p-5 border border-zinc-200">
-          <div className="text-3xl font-extrabold text-zinc-900 mb-1">{starred.length}</div>
-          <div className="text-xs text-zinc-500">Shortlisted</div>
+          <div className="text-3xl font-extrabold text-zinc-900 mb-1">{jobs.length}</div>
+          <div className="text-xs text-zinc-500">Jobs posted</div>
         </div>
-        <div className="bg-white rounded-2xl p-5 border border-zinc-200 col-span-2">
+        <div className="bg-white rounded-2xl p-5 border border-zinc-200">
+          <div className="text-3xl font-extrabold text-zinc-900 mb-1">{jobs.reduce((s, j) => s + (j.applicantCount || 0), 0)}</div>
+          <div className="text-xs text-zinc-500">Total applicants</div>
+        </div>
+        <div className="bg-white rounded-2xl p-5 border border-zinc-200">
           <div className="text-sm font-semibold text-zinc-800 mb-1 truncate">
             {profile?.companyName || <span className="text-zinc-400 font-normal">No company set</span>}
           </div>
@@ -59,14 +67,25 @@ const RecruiterDashboard = () => {
       </div>
 
       {/* Actions */}
-      <div className="grid md:grid-cols-3 gap-4 mb-6">
-        <Link to="/recruiter/search" className="bg-zinc-900 rounded-2xl p-5 text-white hover:bg-zinc-800 transition-colors group">
+      <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <Link to="/recruiter/jobs" className="bg-zinc-900 rounded-2xl p-5 text-white hover:bg-zinc-800 transition-colors group">
           <div className="w-9 h-9 bg-white/10 rounded-xl flex items-center justify-center mb-4">
-            <Search className="h-5 w-5 text-white" />
+            <Briefcase className="h-5 w-5 text-white" />
           </div>
-          <p className="font-semibold mb-1">Find Students</p>
-          <p className="text-xs text-zinc-400">Search by skill — ranked by match</p>
+          <p className="font-semibold mb-1">Post Jobs</p>
+          <p className="text-xs text-zinc-400">Manage job postings</p>
           <div className="mt-4 flex items-center gap-1 text-xs text-zinc-400 group-hover:text-white transition-colors">
+            Go to jobs <ArrowRight className="h-3 w-3" />
+          </div>
+        </Link>
+
+        <Link to="/recruiter/search" className="bg-white rounded-2xl p-5 border border-zinc-200 hover:shadow-md transition-all group">
+          <div className="w-9 h-9 bg-zinc-100 rounded-xl flex items-center justify-center mb-4">
+            <Search className="h-5 w-5 text-zinc-600" />
+          </div>
+          <p className="font-semibold text-zinc-900 mb-1">Find Students</p>
+          <p className="text-xs text-zinc-400">Search by skill — ranked by match</p>
+          <div className="mt-4 flex items-center gap-1 text-xs text-zinc-400 group-hover:text-zinc-700 transition-colors">
             Search now <ArrowRight className="h-3 w-3" />
           </div>
         </Link>

@@ -12,12 +12,17 @@ const profileRoute = {
 const roleLinks = {
   student: [
     { to: '/student/dashboard', label: 'Dashboard' },
+    { to: '/student/jobs', label: 'Jobs' },
+    { to: '/student/applications', label: 'Applications' },
+    { to: '/student/placements', label: 'Placements' },
+    { to: '/student/mentors', label: 'Find Mentors' },
     { to: '/student/search', label: 'Find Students' },
     { to: '/student/shortlist', label: 'Shortlist' },
     { to: '/student/chat', label: 'Messages' },
   ],
   recruiter: [
     { to: '/recruiter/dashboard', label: 'Dashboard' },
+    { to: '/recruiter/jobs', label: 'Jobs' },
     { to: '/recruiter/search', label: 'Find Students' },
     { to: '/recruiter/shortlist', label: 'Shortlist' },
     { to: '/recruiter/chat', label: 'Messages' },

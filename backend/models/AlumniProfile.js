@@ -9,6 +9,8 @@ const alumniProfileSchema = new mongoose.Schema({
   linkedInUrl: { type: String, default: '' },
   bio: { type: String, default: '' },
   phone: { type: String, default: '' },
+  skills: [{ type: String }],
+  yearsOfExperience: { type: Number, default: null },
   isAvailableForMentorship: { type: Boolean, default: true },
   starredStudents: [{ type: mongoose.Schema.Types.ObjectId, ref: 'StudentProfile' }],
 }, { timestamps: true });
