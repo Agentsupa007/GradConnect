@@ -10,12 +10,14 @@ const roleLinks = {
   ],
   recruiter: [
     { to: '/recruiter/dashboard', label: 'Dashboard' },
+    { to: '/recruiter/profile', label: 'My Profile' },
     { to: '/recruiter/search', label: 'Find Students' },
     { to: '/recruiter/shortlist', label: 'Shortlist' },
     { to: '/recruiter/chat', label: 'Chat' },
   ],
   alumni: [
     { to: '/alumni/dashboard', label: 'Dashboard' },
+    { to: '/alumni/profile', label: 'My Profile' },
     { to: '/alumni/search', label: 'Find Students' },
     { to: '/alumni/shortlist', label: 'Shortlist' },
     { to: '/alumni/chat', label: 'Chat' },
